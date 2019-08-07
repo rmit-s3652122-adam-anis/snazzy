@@ -2,3 +2,6 @@
 snazzyenv/
 .vscode/
 .vscode/settings.json
+snazzysite/users/__pycache__/
+snazzysite/shop/__pycache__
+snazzysite/__pycache__
