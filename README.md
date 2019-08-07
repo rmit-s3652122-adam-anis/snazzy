@@ -19,6 +19,7 @@ How to get started:
 
 5. Test if able to run the website. Using terminal, inside the site folder (snazzysite) run the command lines: 
 python manage.py migrate (to update website settings)
+python manage.py createsuperuser (everytime a new database is created, need to add a new superuser/admin)
 python manage.py runserver (to run our website)
 
 Any issues, please contact email address below:
