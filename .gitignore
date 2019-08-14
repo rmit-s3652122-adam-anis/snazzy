@@ -6,3 +6,5 @@ snazzysite/users/__pycache__
 snazzysite/shop/__pycache__
 snazzysite/__pycache__
 *.pyc
+snazzysite/media/profile_pics/adam.jpg
+snazzysite/users/migrations/0001_initial.py
