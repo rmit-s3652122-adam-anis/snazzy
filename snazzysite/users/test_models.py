@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from .models import Profile
 
 #create your tests here
 
@@ -19,4 +20,9 @@ class ModelTest(TestCase):
 
     def test_user_models(self):
         findUser = User.objects.get(username="testUser")
-        self.assertEqual(findUser.email, 'test@email.com')    
+        self.assertEqual(findUser.email, 'test@email.com')
+
+    def test_profile_models(self):
+        findUser = User.objects.get(username="testUser")
+        findProfile = Profile.objects.get(user=findUser)
+        self.assertEquals(findProfile.image, 'default.jpg')        

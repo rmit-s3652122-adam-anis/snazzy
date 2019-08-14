@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     #3rd party apps
     'crispy_forms',
+    'django_cleanup',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'shop-home'
 
 LOGIN_URL = 'login'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # full path to store uploaded files (snazzysite/media/profile_pics)
+
+MEDIA_URL = '/media/'
