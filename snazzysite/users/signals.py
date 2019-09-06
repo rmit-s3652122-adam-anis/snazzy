@@ -7,7 +7,7 @@ from .models import Profile
 def create_profile(sender, instance, created, **kwargs):
     """
     When a user is saved, send signal to receiver which is this function.
-    Them, this function will receive argument values from post_save:-
+    Then, this function will receive argument values from post_save:-
     instance: instance of User object
     created: check if the User is created
     """
