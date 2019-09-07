@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     #3rd party apps
     'crispy_forms',
     'django_cleanup',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +149,15 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('GOOGLE_APP_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('GOOGLE_APP_PASS')
+
+# AWS_ACCESS_KEY_ID = ''
+# AWS_SECRET_ACCESS_KEY = ''
+# AWS_STORAGE_BUCKET_NAME = 'snazzysite-bucket'
+# AWS_S3_FILE_OVERWRITE = False # do not overwrite files with same name
+# AWS_DEFAULT_ACL = None 
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'snazzysite-bucket'
+GS_FILE_OVERWRITE = False # do not overwrite files with same name
