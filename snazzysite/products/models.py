@@ -1,10 +1,18 @@
 from django.db import models
 
-class Item(models.Model):
-	name = models.CharField(max_length=100, blank=False, null=False)
-	desc = models.TextField()	
+class ProductStyle(models.Model):
+	product_style 		= models.CharField(max_length=100, blank=False, null=False)
 
-class ItemVariant(models.Model):
+class ProductType(models.Model):
+	product_type		= models.CharField(max_length=100, blank=False, null=False) 
+
+class Product(models.Model):
+	name 	= models.CharField(max_length=100, blank=False, null=False)
+	desc 	= models.TextField()	
+	styleID = models.ForeignKey(ProductStyle, on_delete=models.CASCADE)
+	typeID 	= models.ForeignKey(ProductType, on_delete=models.CASCADE)
+
+class ProductVariant(models.Model):
 	XS = "Extra Small"
 	S = "Small"
 	M = "Medium"
@@ -37,12 +45,18 @@ class ItemVariant(models.Model):
 	gender 		= models.CharField(max_length=100, choices=GENDER_CHOICES, blank=False, null=False)
 	quantity 	= models.PositiveIntegerField(blank=False, null=False)
 	price 		= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)
-	image 		= models.ImageField(default='default.jpg', upload_to='profile_pics')
-	item 		= models.ForeignKey(Item, on_delete=models.CASCADE)	
+	product		= models.ForeignKey(Product, on_delete=models.CASCADE)
 
-class OrderItem(models.Model):
+
+class ProductImage(models.Model):
+	product 	= models.ForeignKey(Product, on_delete=models.CASCADE)
+	images 		= models.ImageField(default='default.jpg', upload_to='profile_pics')
+
+
+class OrderProduct(models.Model):
 	quantity 	= models.PositiveIntegerField(blank=False, null=False)
-	items 		= models.ForeignKey(ItemVariant, on_delete=models.CASCADE)
+	products	= models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
+
 
 class Order(models.Model):
 	STD = "Standard Delivery"
@@ -79,4 +93,4 @@ class Order(models.Model):
 	payment_method 	= models.CharField(max_length=100, choices=PAY_METHOD_CHOICES, blank=False, null=False)
 	payment_status 	= models.BooleanField(default=False)
 	total_price 	= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)
-	items 			= models.ManyToManyField(OrderItem)
+	products		= models.ManyToManyField(OrderProduct)

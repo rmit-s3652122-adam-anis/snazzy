@@ -1,8 +1,11 @@
 from django.contrib import admin
 
-from .models import Item, ItemVariant, OrderItem, Order
+from .models import Product, ProductVariant, OrderProduct, Order, ProductStyle, ProductType, ProductImage
 
-admin.site.register(Item)
-admin.site.register(ItemVariant)
-admin.site.register(OrderItem)
+admin.site.register(Product)
+admin.site.register(ProductVariant)
+admin.site.register(OrderProduct)
 admin.site.register(Order)	
+admin.site.register(ProductStyle)	
+admin.site.register(ProductType)	
+admin.site.register(ProductImage)	
