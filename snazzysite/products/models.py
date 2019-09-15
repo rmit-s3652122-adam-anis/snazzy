@@ -3,14 +3,23 @@ from django.db import models
 class ProductStyle(models.Model):
 	product_style 		= models.CharField(max_length=100, blank=False, null=False)
 
+	def __str__(self):
+		return self.product_style
+
 class ProductType(models.Model):
 	product_type		= models.CharField(max_length=100, blank=False, null=False) 
+
+	def __str__(self):
+		return self.product_type
 
 class Product(models.Model):
 	name 	= models.CharField(max_length=100, blank=False, null=False)
 	desc 	= models.TextField()	
 	styleID = models.ForeignKey(ProductStyle, on_delete=models.CASCADE)
 	typeID 	= models.ForeignKey(ProductType, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.name
 
 class ProductVariant(models.Model):
 	XS = "Extra Small"
@@ -47,6 +56,9 @@ class ProductVariant(models.Model):
 	price 		= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)
 	product		= models.ForeignKey(Product, on_delete=models.CASCADE)
 
+	def __str__(self):
+		return self.product.name
+
 def product_images_path(instance, filename):
 	return 'product_images/{0}/{1}'.format(instance.product.id, filename)
 
@@ -54,10 +66,16 @@ class ProductImage(models.Model):
 	product 	= models.ForeignKey(Product, on_delete=models.CASCADE)
 	images 		= models.ImageField(upload_to=product_images_path)
 
+	def __str__(self):
+		return self.product.name
+
 
 class OrderProduct(models.Model):
 	quantity 	= models.PositiveIntegerField(blank=False, null=False)
 	products	= models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.id
 
 
 class Order(models.Model):
@@ -96,3 +114,6 @@ class Order(models.Model):
 	payment_status 	= models.BooleanField(default=False)
 	total_price 	= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)
 	products		= models.ManyToManyField(OrderProduct)
+
+	def __str__(self):
+		return self.ref_no
