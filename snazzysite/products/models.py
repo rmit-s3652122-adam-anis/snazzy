@@ -47,10 +47,12 @@ class ProductVariant(models.Model):
 	price 		= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)
 	product		= models.ForeignKey(Product, on_delete=models.CASCADE)
 
+def product_images_path(instance, filename):
+	return 'product_images/{0}/{1}'.format(instance.product.id, filename)
 
 class ProductImage(models.Model):
 	product 	= models.ForeignKey(Product, on_delete=models.CASCADE)
-	images 		= models.ImageField(default='default.jpg', upload_to='profile_pics')
+	images 		= models.ImageField(upload_to=product_images_path)
 
 
 class OrderProduct(models.Model):
