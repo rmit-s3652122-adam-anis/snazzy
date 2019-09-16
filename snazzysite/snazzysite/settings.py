@@ -46,9 +46,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_cleanup',
     'storages',
-
-    #own apps
-    'products',
 ]
 
 MIDDLEWARE = [
