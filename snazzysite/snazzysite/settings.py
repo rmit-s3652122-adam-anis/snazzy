@@ -157,7 +157,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('GOOGLE_APP_PASS')
 # AWS_DEFAULT_ACL = None 
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = 'snazzysite-bucket'
-GS_FILE_OVERWRITE = False # do not overwrite files with same name
+# GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+# DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+# GS_BUCKET_NAME = 'snazzysite-bucket'
+# GS_FILE_OVERWRITE = False # do not overwrite files with same name
