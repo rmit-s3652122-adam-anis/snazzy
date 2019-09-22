@@ -105,7 +105,7 @@ class ProductVariant(models.Model):
 	
 
 	def __str__(self):
-		return self.product.name
+		return f'{self.product.name} {self.pk}'
 
 def product_images_path(instance, filename):
 	return 'product_images/{0}/{1}'.format(instance.product.id, filename) # file will be uploaded to MEDIA_ROOT/product_<id>/<filename>

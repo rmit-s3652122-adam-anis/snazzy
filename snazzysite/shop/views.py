@@ -91,7 +91,9 @@ class ProductDetailView(FormMixin, DetailView):
 
     def get_success_url(self):
         # return reverse('product_detail', kwargs={'slug': self.object.slug})
-        return reverse('shop-home')         
+        return redirect('product-detail', kwargs={
+            'slug': self.object.slug
+        })         
 
 def about(request):
     return render(request, 'shop/about.html', {'title': 'About'})
