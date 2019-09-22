@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.text import slugify
+from datetime import timedelta
 
 class ProductStyle(models.Model):
 	description = models.CharField(max_length=100, blank=False, null=False)
@@ -17,8 +18,21 @@ class ProductType(models.Model):
 		return self.description
 
 class Product(models.Model):
+
+	FEM = "FEM"
+	MAL = "MAL"
+	UNI = "UNI"
+
+	GENDER_CHOICES = (
+		(FEM, "Female"),
+		(MAL, "Male"),
+		(UNI, "Unisex"),
+	)
+
 	name 			= models.CharField(max_length=100, blank=False, null=False)
-	description 	= models.TextField()	
+	description 	= models.TextField()
+	gender 			= models.CharField(max_length=3, choices=GENDER_CHOICES, default=UNI, blank=False, null=False)
+	price 			= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)	
 	product_style 	= models.ForeignKey(ProductStyle, on_delete=models.SET_NULL, null=True)
 	product_type 	= models.ForeignKey(ProductType, on_delete=models.SET_NULL, null=True)
 	created_at		= models.DateTimeField(editable=False)
@@ -46,7 +60,15 @@ class Product(models.Model):
 	def get_remove_from_cart_url(self):
 		return reverse('product-remove-cart', kwargs={
 			'slug': self.slug
-		})	
+		})
+
+	def is_new(self):
+
+		start_date = self.created_at.date()
+		end_date = start_date + timedelta(days=7)
+		if end_date > timezone.now().date():
+			return True
+		return False	
 
 class ProductVariant(models.Model):
 	XS 	= "XS"
@@ -65,22 +87,22 @@ class ProductVariant(models.Model):
 		(XXL, "Extra Extra Large"),
 	)
 
-	FEM = "FEM"
-	MAL = "MAL"
-	UNI = "UNI"
+	# FEM = "FEM"
+	# MAL = "MAL"
+	# UNI = "UNI"
 
-	GENDER_CHOICES = (
-		(FEM, "Female"),
-		(MAL, "Male"),
-		(UNI, "Unisex"),
-	)
+	# GENDER_CHOICES = (
+	# 	(FEM, "Female"),
+	# 	(MAL, "Male"),
+	# 	(UNI, "Unisex"),
+	# )
 
-	product		= models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_variants")
+	product		= models.ForeignKey(Product, on_delete=models.CASCADE, related_name="has_variants")
 	color 		= models.CharField(max_length=50, blank=False, null=False)
 	size 		= models.CharField(max_length=4, choices=SIZE_CHOICES, default=M, blank=False, null=False)
-	gender 		= models.CharField(max_length=3, choices=GENDER_CHOICES, default=UNI, blank=False, null=False)
+	# gender 		= models.CharField(max_length=3, choices=GENDER_CHOICES, default=UNI, blank=False, null=False)
 	quantity 	= models.PositiveIntegerField(blank=False, null=False)
-	price 		= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)
+	
 
 	def __str__(self):
 		return self.product.name
@@ -89,21 +111,21 @@ def product_images_path(instance, filename):
 	return 'product_images/{0}/{1}'.format(instance.product.id, filename) # file will be uploaded to MEDIA_ROOT/product_<id>/<filename>
 
 class ProductImage(models.Model):
-	product 	= models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_images")
+	product 	= models.ForeignKey(Product, on_delete=models.CASCADE, related_name="has_images")
 	imagefile 	= models.ImageField(upload_to=product_images_path)
 
 	def __str__(self):
-		return self.imagefile
+		return f'{self.product} image {self.id}'
 
 
 class OrderProduct(models.Model):
-	# buyer = models.ForeignKey(User, on_delete=models.CASCADE)
-	# ordered			= models.BooleanField(default=False)
-	quantity 	= models.PositiveIntegerField(default = 1, blank=False, null=False)
+	buyer 			= models.ForeignKey(User, on_delete=models.CASCADE)
+	ordered			= models.BooleanField(default=False)
+	quantity 		= models.PositiveIntegerField(default = 0, blank=False, null=False)
 	product_variant	= models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return self.pk
+		return str(self.pk)
 
 	def get_total_item_price(self):
 		return self.quantity * self.product_variant.price
@@ -139,7 +161,7 @@ class Order(models.Model):
 	# shipped			= models.BooleanField(default=False)
 
 	def __str__(self):
-		return self.buyer.username
+		return f'{self.buyer.username} {self.pk}'
 
 	def get_total(self):
 		total = 0
