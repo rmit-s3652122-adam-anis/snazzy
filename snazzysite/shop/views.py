@@ -184,18 +184,18 @@ def remove_from_cart(request, variant_id):
     Remove a product variant from cart
     """
     # item = get_object_or_404(Item, slug=slug)
-    product_variant = get_object_or_404(OrderProduct, id=variant_id)
+    product_variant = get_object_or_404(ProductVariant, id=variant_id)
     order_qs = Order.objects.filter(
-        user=request.user,
+        buyer=request.user,
         ordered=False
     )
     if order_qs.exists():
         order = order_qs[0]
         # check if the order item is in the order
-        if order.order_products.filter(order_products__id=product_variant.id).exists():
+        if order.order_products.filter(product_variant__id=product_variant.id).exists():
             order_product = OrderProduct.objects.filter(
                 product_variant=product_variant,
-                user=request.user,
+                buyer=request.user,
                 ordered=False
             )[0]
             order.order_products.remove(order_product)
@@ -217,7 +217,7 @@ def remove_single_item_from_cart(request, variant_id):
     """
     product_variant = get_object_or_404(ProductVariant, id=variant_id)
     order_qs = Order.objects.filter(
-        user=request.user,
+        buyer=request.user,
         ordered=False
     )
     if order_qs.exists():
@@ -226,7 +226,7 @@ def remove_single_item_from_cart(request, variant_id):
         if order.order_products.filter(product_variant__id=product_variant.id).exists():
             order_product = OrderProduct.objects.filter(
                 product_variant=product_variant,
-                user=request.user,
+                buyer=request.user,
                 ordered=False
             )[0]
             if order_product.quantity > 1:
@@ -256,7 +256,7 @@ def add_to_cart(request, variant_id):
         user=request.user,
         ordered=False
     )
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    order_qs = Order.objects.filter(buyer=request.user, ordered=False)
     if order_qs.exists():
         order = order_qs[0]
         # check if the order item is in the order
@@ -270,7 +270,7 @@ def add_to_cart(request, variant_id):
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
-            user=request.user, ordered_date=ordered_date)
+            buyer=request.user, ordered_date=ordered_date)
         order.products.add(order_product)
         messages.info(request, "This item was added to your cart.")
     return redirect("order-summary")    
