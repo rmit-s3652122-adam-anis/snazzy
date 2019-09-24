@@ -38,7 +38,7 @@ class Product(models.Model):
 	created_at		= models.DateTimeField(editable=False)
 	updated_at 		= models.DateTimeField(null=True)
 	slug 			= models.SlugField(unique=True)
-
+	supplier 		= models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
 	def __str__(self):
 		return self.name
 
@@ -128,7 +128,7 @@ class OrderProduct(models.Model):
 		return str(self.pk)
 
 	def get_total_item_price(self):
-		return self.quantity * self.product_variant.price
+		return self.quantity * self.product_variant.product.price
 
 
 class Order(models.Model):
