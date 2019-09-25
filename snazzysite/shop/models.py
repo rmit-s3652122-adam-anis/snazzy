@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.urls import reverse, reverse_lazy
 from django.utils.text import slugify
 from datetime import timedelta
+from users.models import Profile, Address
 
 class ProductStyle(models.Model):
 	description = models.CharField(max_length=100, blank=False, null=False)
@@ -107,6 +108,10 @@ class ProductVariant(models.Model):
 	def __str__(self):
 		return f'{self.product.name} {self.pk}'
 
+	def get_description(self):
+		readable = str(self.color) + " Size " + str(self.size)
+		return readable	
+
 def product_images_path(instance, filename):
 	return 'product_images/{0}/{1}'.format(instance.product.id, filename) # file will be uploaded to MEDIA_ROOT/product_<id>/<filename>
 
@@ -153,12 +158,31 @@ class Order(models.Model):
 	start_date		= models.DateTimeField(auto_now_add=True)
 	ordered_date 	= models.DateTimeField(blank=True, null=True)
 	ordered			= models.BooleanField(default=False)
-	# ref_no 			= models.CharField(max_length=20, blank=True, null=True)	
-	# payment_method 	= models.CharField(max_length=2, choices=PAY_METHOD_CHOICES, default=CC, blank=True, null=True)
+	shipping_address = models.ForeignKey(
+		Address, 
+		related_name='shipping_address', 
+		on_delete=models.SET_NULL,
+		blank=True,
+		null=True
+	)
+	billing_address = models.ForeignKey(
+		Address, 
+		related_name='billing_address', 
+		on_delete=models.SET_NULL,
+		blank=True,
+		null=True
+	)
+	# payment 		= models.ForeignKey(
+    #     'Payment', on_delete=models.SET_NULL, blank=True, null=True)
+    # coupon 		= models.ForeignKey(
+    #     'Coupon', on_delete=models.SET_NULL, blank=True, null=True)
+    # being_delivered = models.BooleanField(default=False)
+    # received 		= models.BooleanField(default=False)
+    # refund_requested = models.BooleanField(default=False)
+    # refund_granted = models.BooleanField(default=False)
 	# delivery_method = models.CharField(max_length=3, choices=DEL_METHOD_CHOICES, default=STD, blank=True, null=True)
-	# total_price 	= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)
-	# paid 			= models.BooleanField(default=False)
-	# shipped			= models.BooleanField(default=False)
+	# ref_no 		= models.CharField(max_length=20, blank=True, null=True)
+	# final_price 	= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)	
 
 	def __str__(self):
 		return f'{self.buyer.username} {self.pk}'

@@ -18,6 +18,10 @@ urlpatterns = [
     path('remove-item-from-cart/<variant_id>/', remove_single_item_from_cart,
          name='remove-single-item-from-cart'),
 
-    #about page     
-    path('about/', about, name='shop-about')
+    # about page     
+    path('about/', about, name='shop-about'),
+
+    # checkout page
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
+
 ]
