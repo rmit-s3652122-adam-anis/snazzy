@@ -24,4 +24,7 @@ urlpatterns = [
     # checkout page
     path('checkout/', CheckoutView.as_view(), name='checkout'),
 
+    # payment page
+    path('payment/<option>/', PaymentView.as_view(), name='payment'),
+
 ]

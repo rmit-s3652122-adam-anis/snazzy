@@ -145,14 +145,6 @@ class Order(models.Model):
 	# 	(EXP, "Express Delivery"),
 	# )
 
-	# CC = "CC"
-	# PP = "PP"
-
-	# PAY_METHOD_CHOICES = (
-	# 	(CC, "Credit Card"),
-	# 	(PP, "PayPal"),
-	# )
-
 	buyer 			= models.ForeignKey(User, on_delete=models.CASCADE)
 	order_products	= models.ManyToManyField(OrderProduct)
 	start_date		= models.DateTimeField(auto_now_add=True)
@@ -172,8 +164,8 @@ class Order(models.Model):
 		blank=True,
 		null=True
 	)
-	# payment 		= models.ForeignKey(
-    #     'Payment', on_delete=models.SET_NULL, blank=True, null=True)
+	payment 		= models.ForeignKey(
+		'Payment', on_delete=models.SET_NULL, blank=True, null=True)
     # coupon 		= models.ForeignKey(
     #     'Coupon', on_delete=models.SET_NULL, blank=True, null=True)
     # being_delivered = models.BooleanField(default=False)
@@ -181,7 +173,7 @@ class Order(models.Model):
     # refund_requested = models.BooleanField(default=False)
     # refund_granted = models.BooleanField(default=False)
 	# delivery_method = models.CharField(max_length=3, choices=DEL_METHOD_CHOICES, default=STD, blank=True, null=True)
-	# ref_no 		= models.CharField(max_length=20, blank=True, null=True)
+	ref_code		= models.CharField(max_length=20, blank=True, null=True)
 	# final_price 	= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)	
 
 	def __str__(self):
@@ -191,5 +183,15 @@ class Order(models.Model):
 		total = 0
 		for order_product in self.order_products.all():
 			total += order_product.get_total_item_price()
-		return total		
+		return total
+
+class Payment(models.Model):
+    stripe_charge_id = models.CharField(max_length=50)
+    user = models.ForeignKey(User,
+                             on_delete=models.SET_NULL, blank=True, null=True)
+    amount = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username				
 

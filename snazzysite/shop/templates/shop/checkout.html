@@ -3,7 +3,6 @@
 
 {% block content %}
 
-  <main >
     <div class="container wow fadeIn">
       <h2 class="my-5 h2 text-center">Checkout form</h2>
       <div class="row">
@@ -137,11 +136,10 @@
       </div>
 
     </div>
-  </main>
 
 {% endblock content %}
 
-{% block extra_scripts %}
+{% block extra_js %}
 <script>
 var hideable_shipping_form = $('.hideable_shipping_form');
 var hideable_billing_form = $('.hideable_billing_form');
@@ -162,5 +160,5 @@ use_default_billing.addEventListener('change', function() {
   }
 })
 </script>
-{% endblock extra_scripts %}
+{% endblock extra_js%}
 

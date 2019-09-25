@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.dispatch import receiver
-from .models import Profile
+from .models import Profile, Address
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
@@ -13,6 +13,8 @@ def create_profile(sender, instance, created, **kwargs):
     """
     if created:
         Profile.objects.create(user=instance)
+        # address_s = Address.objects.create(profile=profile, address_type='S')
+        # address_b = Address.objects.create(profile=profile, address_type='B')
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):

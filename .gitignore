@@ -3,7 +3,7 @@
 # virtual environment and media
 snazzyenv/
 snazzysite/media/profile_pics/
-
+snazzysite/*.migrations
 # vscode
 .vscode/
 .vscode/settings.json

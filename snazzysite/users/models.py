@@ -8,6 +8,8 @@ from django_countries.fields import CountryField
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
+    one_click_purchasing = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.username} Profile'
@@ -33,7 +35,7 @@ class Address(models.Model):
         ('S', 'Shipping'),
     )
 
-    profile = models.ForeignKey(Profile,
+    user = models.ForeignKey(User,
                              on_delete=models.CASCADE)
     street_address = models.CharField(max_length=100)
     apartment_address = models.CharField(max_length=100)

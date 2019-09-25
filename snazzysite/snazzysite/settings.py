@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     'storages',
     'django_countries',
+    'stripe'
 ]
 
 MIDDLEWARE = [
@@ -156,3 +157,6 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = 'snazzy-bucket'
 GS_FILE_OVERWRITE = False # do not overwrite files with same name
+
+# STRIPE
+STRIPE_SECRET_KEY = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"

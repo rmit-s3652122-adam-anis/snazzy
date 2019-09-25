@@ -166,7 +166,7 @@
       {% endif %}
 
       <!-- Block content - This is where other templates overwrites -->
-      {% block content %}{% endblock %}
+      {% block content %}{% endblock content %}
 
     </div>
   </main>
@@ -251,6 +251,9 @@
     new WOW().init();
 
   </script>
+
+  {% block extra_js %}
+  {% endblock extra_js %}
 </body>
 
 </html>
