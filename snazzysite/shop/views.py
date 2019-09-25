@@ -273,7 +273,7 @@ def add_to_cart(request, variant_id):
     product_variant = get_object_or_404(ProductVariant, id=variant_id)
     order_product, created = OrderProduct.objects.get_or_create(
         product_variant=product_variant,
-        user=request.user,
+        buyer=request.user,
         ordered=False
     )
     order_qs = Order.objects.filter(buyer=request.user, ordered=False)
