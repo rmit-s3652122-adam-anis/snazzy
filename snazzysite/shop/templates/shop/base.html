@@ -14,7 +14,8 @@
     {% else %}
         <title>Snazzy</title>
   {% endif %}
-
+  {% block extra_head %}
+  {% endblock extra_head %}
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
   <!-- Bootstrap core CSS -->
@@ -252,8 +253,8 @@
 
   </script>
 
-  {% block extra_js %}
-  {% endblock extra_js %}
+  {% block extra_scripts %}
+  {% endblock extra_scripts %}
 </body>
 
 </html>
