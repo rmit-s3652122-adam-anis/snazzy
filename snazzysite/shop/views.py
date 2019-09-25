@@ -76,16 +76,18 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
             print("product ok")
             if variants.is_valid():
                 # create new variants objects
-                variants.instance= self.object
+                variants.instance = self.object
                 variants.save()
                 print("variants ok")
             if images.is_valid():
                 # create new images objects
-                media = images.save(commit=False)
-                for image in media:
-                    image.product = self.object
-                    image.save()
-                image.save()    
+                for image in images.cleaned_data:
+                    if image:
+                        print(image)
+                        imagefile = image['imagefile']
+                        product = self.object
+                        product_image = ProductImage(product=product, imagefile=imagefile)
+                        product_image.save()
                 print("images ok")
             messages.info(self.request, "Successfully added new product")    
             return super(ProductCreateView, self).form_valid(form)
