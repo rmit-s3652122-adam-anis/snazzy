@@ -45,7 +45,7 @@ class Address(models.Model):
     default = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.profile.user.username
+        return self.user.username
 
     class Meta:
         verbose_name_plural = 'Addresses'

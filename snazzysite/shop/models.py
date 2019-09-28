@@ -39,7 +39,7 @@ class Product(models.Model):
 	created_at		= models.DateTimeField(editable=False)
 	updated_at 		= models.DateTimeField(null=True)
 	slug 			= models.SlugField(unique=True)
-	supplier 		= models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
+	supplier 		= models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
 	def __str__(self):
 		return self.name
 
