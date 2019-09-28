@@ -503,7 +503,7 @@ class PaymentView(View):
                     # update the context with the default card
                     context.update({
                         'card': card_list[0]
-                    })
+                    })    
             return render(self.request, "shop/payment.html", context)
         else:
             messages.warning(
