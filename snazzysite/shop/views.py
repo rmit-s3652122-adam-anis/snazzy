@@ -48,6 +48,14 @@ class HomeListView(ListView):
     ordering = ['-created_at']
     paginate_by = 10
 
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeListView, self).get_context_data(**kwargs)
+        context['styles'] = ProductStyle.objects.all()
+        context['types'] = ProductType.objects.all()
+        return context
+
+
 class ProductCreateView(LoginRequiredMixin, CreateView):
     """
     Create View to users to add new products 

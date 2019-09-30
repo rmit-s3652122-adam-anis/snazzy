@@ -33,6 +33,22 @@
                 <li class="nav-item">
                   <a class="nav-link" href="#">Outwears</a>
                 </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">More Styles</a>
+                  <div class="dropdown-menu">
+                    {% for style in styles %}
+                      <a class="dropdown-item" href="#">{{ style.description }}</a>
+                    {% endfor %}
+                  </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">More Clothing Type</a>
+                    <div class="dropdown-menu">
+                      {% for type in types %}
+                        <a class="dropdown-item" href="#">{{ type.description }}</a>
+                      {% endfor %}
+                    </div>
+                  </li>
     
               </ul>
               <!-- Links -->

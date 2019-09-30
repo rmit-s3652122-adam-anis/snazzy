@@ -174,7 +174,7 @@ class Order(models.Model):
     # refund_granted = models.BooleanField(default=False)
 	# delivery_method = models.CharField(max_length=3, choices=DEL_METHOD_CHOICES, default=STD, blank=True, null=True)
 	ref_code		= models.CharField(max_length=20, blank=True, null=True)
-	# final_price 	= models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False)	
+	# final_price 	= models.DecimalField(max_digits=8, decimal_places=2)	
 
 	def __str__(self):
 		return f'{self.buyer.username} {self.pk}'
