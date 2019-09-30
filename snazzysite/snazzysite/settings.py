@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+from my_secrets import secrets
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'h$3i)fu$(^d&#d#!6$-3sr6s8vl*6*i^8x$cim##0h&+9fz3hm'
+SECRET_KEY = secrets.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -46,6 +48,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_cleanup',
     'storages',
+    'django_countries',
+    'django_secrets',
 ]
 
 MIDDLEWARE = [
@@ -87,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'snazzydb',
         'USER': 'postgres',
-        'PASSWORD': 'abc1234',
+        'PASSWORD': secrets.DB_PASSWORD,
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -147,17 +151,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('GOOGLE_APP_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('GOOGLE_APP_PASS')
+# EMAIL_HOST_USER = os.environ.get('GOOGLE_APP_USER')
+EMAIL_HOST_USER = secrets.EMAIL_HOST_USER
+# EMAIL_HOST_PASSWORD = os.environ.get('GOOGLE_APP_PASS')
+EMAIL_HOST_PASSWORD = secrets.EMAIL_HOST_PASSWORD
 
-# AWS_ACCESS_KEY_ID = ''
-# AWS_SECRET_ACCESS_KEY = ''
-# AWS_STORAGE_BUCKET_NAME = 'snazzysite-bucket'
-# AWS_S3_FILE_OVERWRITE = False # do not overwrite files with same name
-# AWS_DEFAULT_ACL = None 
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
+# GOOGLE CLOUD STORAGE
 # GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-# DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-# GS_BUCKET_NAME = 'snazzysite-bucket'
-# GS_FILE_OVERWRITE = False # do not overwrite files with same name
+GOOGLE_APPLICATION_CREDENTIALS = secrets.GOOGLE_APPLICATION_CREDENTIALS
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'snazzy-bucket'
+GS_FILE_OVERWRITE = False # do not overwrite files with same name
+
+# STRIPE
+STRIPE_SECRET_KEY = secrets.STRIPE_SECRET_KEY
