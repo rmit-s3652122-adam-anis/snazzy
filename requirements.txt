@@ -9,8 +9,10 @@ Django==2.2.4
 django-cleanup==4.0.0
 django-countries==5.5
 django-crispy-forms==1.7.2
+django-secrets==1.0.2
 django-storages==1.7.1
 docutils==0.15.2
+future==0.17.1
 google-api-core==1.14.2
 google-auth==1.6.3
 google-cloud-core==1.0.3
