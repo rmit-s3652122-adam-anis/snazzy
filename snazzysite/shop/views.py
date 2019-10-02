@@ -37,7 +37,17 @@ def is_valid_form(values):
     for field in values:
         if field == '':
             valid = False
-    return valid    
+    return valid
+
+def search_product(userinput):
+
+    # search products with the product name/style/type which have the input string
+    search_queryset = Product.objects.filter(name__icontains=userinput) | Product.objects.filter(product_style__description__icontains=userinput) | Product.objects.filter(product_type__description__icontains=userinput)
+    ordered_queryset = search_queryset.order_by('-created_at')
+    print(userinput)
+    print(ordered_queryset)
+    return ordered_queryset
+
 
 # Create your views here.
 
@@ -48,9 +58,14 @@ class HomeListView(ListView):
     ordering = ['-created_at']
     paginate_by = 10
 
+    def get_queryset(self):
+        filter_val = self.request.GET.get('filter', '')
+        new_context = search_product(filter_val)
+        return new_context
 
     def get_context_data(self, **kwargs):
         context = super(HomeListView, self).get_context_data(**kwargs)
+        context['filter'] = self.request.GET.get('filter', '')
         context['styles'] = ProductStyle.objects.all()
         context['types'] = ProductType.objects.all()
         return context

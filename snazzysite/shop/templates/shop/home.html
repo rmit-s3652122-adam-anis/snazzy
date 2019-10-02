@@ -1,4 +1,5 @@
 {% extends "shop/base.html" %}
+{% load home_template_tags %}
 {% block content %}
         <div class="container">
             
@@ -24,7 +25,7 @@
                     <span class="sr-only">(current)</span>
                   </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a class="nav-link" href="#">Shirts</a>
                 </li>
                 <li class="nav-item">
@@ -32,20 +33,36 @@
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">Outwears</a>
-                </li>
+                </li> -->
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">More Styles</a>
-                  <div class="dropdown-menu">
+                  <div class="dropdown-menu dropdown-multicol2" style="width: 35em">
                     {% for style in styles %}
+                    {% if forloop.counter|modulo:5 == 1 %}
+                      <div class="dropdown-col" style="display:inline-block; width:32%">
+                        <a class="dropdown-item" href="#">{{ style.description }}</a>
+                    {% elif forloop.last or forloop.counter|modulo:5 == 0 %}
                       <a class="dropdown-item" href="#">{{ style.description }}</a>
+                      </div>
+                    {% else %}
+                      <a class="dropdown-item" href="#">{{ style.description }}</a>
+                    {% endif %}  
                     {% endfor %}
                   </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">More Clothing Type</a>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu dropdown-multicol2" style="width: 35em">
                       {% for type in types %}
+                      {% if forloop.counter|modulo:5 == 1 %}
+                        <div class="dropdown-col" style="display:inline-block; width:32%">
+                          <a class="dropdown-item" href="#">{{ type.description }}</a>
+                      {% elif forloop.last or forloop.counter|modulo:5 == 0 %}
                         <a class="dropdown-item" href="#">{{ type.description }}</a>
+                        </div>
+                      {% else %}
+                        <a class="dropdown-item" href="#">{{ type.description }}</a>
+                      {% endif %}  
                       {% endfor %}
                     </div>
                   </li>
@@ -53,9 +70,10 @@
               </ul>
               <!-- Links -->
     
-              <form class="form-inline">
+              <form class="form-inline" method="get" action="{% url 'shop-home' %}">
                 <div class="md-form my-0">
-                  <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                  <input class="form-control mr-sm-2" type="text" name="filter" value="{{filter}}" placeholder="Product Name/Style/Type" aria-label="Search">
+                  <input class="form-control mr-sm-2" type="submit" name="search" value="search">
                 </div>
               </form>
             </div>
