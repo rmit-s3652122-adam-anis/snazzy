@@ -195,3 +195,8 @@ GS_FILE_OVERWRITE = False # do not overwrite files with same name
 
 # STRIPE
 STRIPE_SECRET_KEY = secrets.STRIPE_SECRET_KEY
+
+# REDIS
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 1
