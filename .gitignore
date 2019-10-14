@@ -137,3 +137,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 snazzysite/my_secrets/secrets.py
+snazzysite/.bash-profile.save
+.vscode/settings.json

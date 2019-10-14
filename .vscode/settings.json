@@ -1,4 +1,6 @@
 {
     "git.ignoreLimitWarning": true,
-    "python.pythonPath": "snazzyenv\\Scripts\\python3.exe"
+    //"python.pythonPath": "snazzyenv\\Scripts\\python3.exe",
+    "python.pythonPath": "/Users/ethan/Documents/GitHub/snazzy/snazzyenv/bin/python3.7",
+    "python.linting.enabled": false
 }
