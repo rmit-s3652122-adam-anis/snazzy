@@ -86,16 +86,46 @@ WSGI_APPLICATION = 'snazzysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'snazzydb',
-        'USER': 'postgres',
-        'PASSWORD': secrets.DB_PASSWORD,
-        'HOST': 'localhost',
-        'PORT': '5432',
+# [START db_setup]
+if os.getenv('GAE_APPLICATION', None):
+    # Running on production App Engine, so connect to Google Cloud SQL using
+    # the unix socket at /cloudsql/<your-cloudsql-connection string>
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '/cloudsql/snazzy-proj:australia-southeast1:snazzyinstance',
+            'USER': 'snazzyadmin',
+            'PASSWORD': 'pp1_snazzy_2019',
+            'NAME': 'snazzydb',
+        }
     }
-}
+else:
+    # Running locally so connect to either a local MySQL instance or connect 
+    # to Cloud SQL via the proxy.  To start the proxy via command line: 
+    #    $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306 
+    # See https://cloud.google.com/sql/docs/mysql-connect-proxy
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+            'NAME': 'snazzydb',
+            'USER': 'snazzyadmin',
+            'PASSWORD': 'pp1_snazzy_2019',
+        }
+    }
+# [END db_setup]
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'snazzydb',
+#         'USER': 'postgres',
+#         'PASSWORD': secrets.DB_PASSWORD,
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
@@ -168,3 +198,7 @@ GS_FILE_OVERWRITE = False # do not overwrite files with same name
 # STRIPE
 STRIPE_SECRET_KEY = secrets.STRIPE_SECRET_KEY
 
+# REDIS
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 1

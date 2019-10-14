@@ -139,3 +139,6 @@ dmypy.json
 snazzysite/my_secrets/secrets.py
 snazzysite/.bash-profile.save
 .vscode/settings.json
+
+# migrations
+*.migrations
