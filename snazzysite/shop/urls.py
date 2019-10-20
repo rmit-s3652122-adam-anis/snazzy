@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from .views import *
 
 urlpatterns = [
@@ -26,5 +26,10 @@ urlpatterns = [
 
     # payment page
     path('payment/<option>/', PaymentView.as_view(), name='payment'),
+
+    path('product/<slug>/update', ProductUpdateView.as_view(), name="update"),
+
+    path('product/<slug>/delete', product_delete_view, name="delete"),
+
 
 ]

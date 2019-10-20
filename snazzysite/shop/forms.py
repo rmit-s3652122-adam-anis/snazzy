@@ -117,6 +117,30 @@ class ProductForm(forms.ModelForm):
             )
         )
 
+class ProductUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Product
+        exclude = ['supplier', 'created_at', 'updated_at', 'slug']
+
+    def __init__(self, *args, **kwargs):
+        super(ProductUpdateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.label_class = 'col-md-3 create-label'
+        self.helper.field_class = 'col-md-9'
+        self.helper.layout = Layout(
+            Div(
+                Field('product_style'),
+                Field('product_type'),
+                Field('gender'),
+                Field('name'),
+                Field('description'),
+                Field('price'),
+                ButtonHolder(Submit('submit', 'save')),
+            )
+        )
+
 """ADD PRODUCT TO CART FORM"""
 class AddToCartForm(forms.Form):
 

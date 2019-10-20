@@ -1,0 +1,25 @@
+{% extends "shop/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <div class="card">
+            <div class="card-header">
+                Add product
+            </div>
+            <div class="card-body">
+                <form enctype="multipart/form-data" required=True class="form-horizontal" action="" method="POST">
+                    {% csrf_token %}
+                    {% crispy form %}
+                    <!-- <fieldset>
+                        <legend>Add images</legend>
+                        <input type="file" name="images" multiple></input>
+                    </fieldset>
+                    <br>
+                    <br> -->
+                    <!-- <input type="submit" value="Save"> -->
+                </form>
+                <a class="btn btn-outline-danger"" href="/product/{{ product.slug}}/delete">Delete</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

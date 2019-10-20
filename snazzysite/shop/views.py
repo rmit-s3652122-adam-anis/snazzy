@@ -16,6 +16,8 @@ from django.views.generic import (
     DetailView, 
     View, 
     FormView,
+    UpdateView,
+    DeleteView,
     )
 from django.utils import timezone
 
@@ -49,6 +51,7 @@ def search_product(userinput):
     return ordered_queryset
 
 
+
 # Create your views here.
 
 class HomeListView(ListView):
@@ -69,6 +72,81 @@ class HomeListView(ListView):
         context['styles'] = ProductStyle.objects.all()
         context['types'] = ProductType.objects.all()
         return context
+
+"""class ProductUpdateView(LoginRequiredMixin, UpdateView):
+
+    Update View to users to update products 
+    
+
+    def product_update(request, slug=None):
+        instance = get_object_or_404(Product, slug=slug)
+        form = ProductForm(request.POST or None, isinstance=instance)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save
+
+        context = {
+            "title": instance.title,
+            "instance": instance,
+            "form": form,
+        }
+        return render(request, "post_form.html", context)
+
+"""
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
+    """
+    Create View to users to Update products
+    """
+
+    model = Product
+    template_name = 'shop/product_update_form.html'
+    form_class =  ProductUpdateForm
+    slug_field = 'slug' 
+
+    def form_valid(self, form):
+        product = form.save(commit=False)
+        product = form.detele(commit=False)
+        form.instance.user = self.request.user
+        product.save()
+        product.delete()
+        self.object = product
+        return super(ProductUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+       return reverse('profile')    
+
+'''
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+  
+    Create View to users to delete products
+    
+
+    template_name = 'shop/product_delete.html'
+
+    def get_object(self):
+        slug = self.kwargs.get("slug")
+        return get_object_or_404(Product, slug=slug)
+
+    def get_success_url(self):
+       return reverse('profile')   
+'''
+
+
+def product_delete_view(request, slug=None):
+
+    product= get_object_or_404(Product, slug=slug)
+
+    if request.method == "POST":
+        product.delete()
+        messages.success(request, "Product successfully deleted!")
+        return HttpResponseRedirect("../../profile")
+    
+    context= {'product': product,
+              }
+    
+    return render(request, 'Shop/product_confirm_delete.html', context)
+ 
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
@@ -644,3 +722,5 @@ class PaymentView(View):
 
         messages.warning(self.request, "Invalid data received")
         return redirect("/payment/stripe/")
+
+    

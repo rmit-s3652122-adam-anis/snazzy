@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from shop.models import Product
 
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 
@@ -37,8 +38,14 @@ def profile(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
+    queryset = Product.objects.filter(supplier=request.user.profile.id)
+
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        "product_list": queryset
     }    
+
     return render(request, 'users/profile.html', context)
+
+
