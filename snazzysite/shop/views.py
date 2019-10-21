@@ -106,10 +106,8 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         product = form.save(commit=False)
-        product = form.detele(commit=False)
         form.instance.user = self.request.user
         product.save()
-        product.delete()
         self.object = product
         return super(ProductUpdateView, self).form_valid(form)
 
