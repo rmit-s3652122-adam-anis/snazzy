@@ -185,7 +185,6 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         context = self.get_context_data()
         variants = context['variants']
         images = context['images']
-        print(images.cleaned_data)
         with transaction.atomic():
             # create new product object
             form.instance.supplier = self.request.user
@@ -200,7 +199,6 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
                 # create new images objects
                 for image in images.cleaned_data:
                     if image:
-                        print(image)
                         imagefile = image['image']
                         product = self.object
                         product_image = ProductImage(product=product, imagefile=imagefile)
@@ -237,6 +235,8 @@ class ProductDetailView(FormMixin, DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
         self.object = self.get_object()
         form = self.get_form()
         if form.is_valid():
@@ -406,6 +406,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
             return redirect("/")
+           
 
 def about(request):
     return render(request, 'shop/about.html', {'title': 'About'})
@@ -664,6 +665,8 @@ class PaymentView(View):
                 order_products = order.order_products.all()
                 order_products.update(ordered=True)
                 for order_product in order_products:
+                    # check if user bought item before, set the same rating if true
+                    order_product.rating = Rating.objects.filter(user = payment.user, product = order_product.product_variant.product).first()
                     order_product.save()
                     # update stock quantity of product variants
                     product_variant = order_product.product_variant
@@ -721,4 +724,18 @@ class PaymentView(View):
         messages.warning(self.request, "Invalid data received")
         return redirect("/payment/stripe/")
 
-    
+class OrderSuccessView(LoginRequiredMixin, View):
+    """
+    Successful orders enabled for ratings view
+    """
+    def get(self, *args, **kwargs):
+        try:
+            context = {}
+            orders = Order.objects.filter(buyer=self.request.user, ordered=True)
+            context.update({
+                'object': orders,
+            })
+            return render(self.request, 'shop/order_success.html', context)
+        except ObjectDoesNotExist:
+            messages.warning(self.request, "You do not have a successful ordered product")
+            return redirect("/")         

@@ -18,6 +18,9 @@ urlpatterns = [
     path('remove-item-from-cart/<variant_id>/', remove_single_item_from_cart,
          name='remove-single-item-from-cart'),
 
+    # successfully ordered page
+    path('order-success/', OrderSuccessView.as_view(), name='order-success'),     
+
     # about page     
     path('about/', about, name='shop-about'),
 
@@ -30,6 +33,4 @@ urlpatterns = [
     path('product/<slug>/update', ProductUpdateView.as_view(), name="update"),
 
     path('product/<slug>/delete', product_delete_view, name="delete"),
-
-
 ]

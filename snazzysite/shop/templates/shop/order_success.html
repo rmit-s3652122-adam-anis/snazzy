@@ -1,0 +1,78 @@
+{% extends "shop/base.html" %}
+
+{% block extra_head %}
+<style>
+
+.order-list {
+    width: 988px;
+}
+
+.order {
+    margin-top : 12px;
+    padding-bottom : 24px;
+    background-color: #fff;
+}
+
+.order-info {
+    padding: 8px 12px;
+    min-height: 50px;
+    border-bottom: 1px solid #dadada;
+    display: -webkit-box;
+    display: flex;
+}
+
+.pull-left {
+    float: left;
+}
+
+.order-item {
+    min-height: 80px;
+    margin: 24px 12px 24px 36px;
+    padding-right: 12px;
+    width: 916px;
+}
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+  <main>
+    <div class="container">
+
+    <div class="order-list">
+    <h2>Successful Orders</h2>
+    {% for order in object %}
+        <div class='order'>
+            <div class='order-info'>
+                <div class='pull-left'>
+                    <p>Order ref: {{ order.ref_code }}</p>
+                    <p>Ordered on {{ order.ordered_date }} </p>
+                </div>
+            </div>
+            <div class='order-item'>
+                <table class="table">
+                    <tbody>
+                        {% for order_product in order.order_products.all %}
+                            <tr>
+                                <td>{{ order_product.product_variant.product.name }} ({{order_product.product_variant.color}} - {{order_product.product_variant.size}}) </td>
+                                <td>Qty: {{ order_product.quantity }}</td>
+                                <td>Total Price: {{ order_product.get_total_item_price }}</td>
+                                {% if order_product.rating %}
+                                    <td><a class='btn btn-primary float-right' href=''>Edit Review</a></td>
+                                {% else %}
+                                    <td><a class='btn btn-primary float-right' href=''>Write A Review</a></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% empty %}
+        <p>You have no completed orders</p>
+    {% endfor %}
+
+    </div>
+    </div>
+  </main>
+
+{% endblock content %}

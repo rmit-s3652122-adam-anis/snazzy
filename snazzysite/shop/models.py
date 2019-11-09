@@ -128,6 +128,7 @@ class OrderProduct(models.Model):
 	ordered			= models.BooleanField(default=False)
 	quantity 		= models.PositiveIntegerField(default = 0, blank=False, null=False)
 	product_variant	= models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
+	rating			= models.ForeignKey('Rating', blank=True, null=True, on_delete=models.SET_NULL)
 
 	def __str__(self):
 		return str(self.pk)
@@ -193,5 +194,27 @@ class Payment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username				
+        return self.user.username
+
+class Rating(models.Model):
+
+	rating_CHOICES = (
+		(1, 'Poor'),
+		(2, 'Average'),
+		(3, 'Good'),
+		(4, 'Very Good'),
+		(5, 'Excellent')
+	)
+
+	user = models.ForeignKey(User, related_name='vote', on_delete=models.SET_NULL, null=True)
+	product = models.ForeignKey(Product, related_name='product', on_delete=models.CASCADE)
+	score = models.IntegerField(choices=rating_CHOICES, default=1)
+	review = models.TextField()
+
+	def __str__(self):
+		return "Rating: {}:{}= {}".format(self.product.name, self.user.username, self.score)
+
+	def getReview(self):
+		return self.review	
+
 
