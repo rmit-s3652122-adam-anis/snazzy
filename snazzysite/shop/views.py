@@ -1,3 +1,4 @@
+from collections import Counter
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -217,6 +218,25 @@ class ProductDetailView(FormMixin, DetailView):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         # context['form'] = AddToCartForm(product_choice=self.get_object())
         context['form'] = self.get_form()
+        # populate product ratings and average rating score
+        ratings = Rating.objects.filter(product=self.get_object())
+        scoreList = []
+        for rating in ratings:
+            scoreList.append(rating.score)    
+        averageScore = sum(scoreList) / len(scoreList)
+        counter = Counter(scoreList)
+        scoreCounter = {
+            'five' : counter[5],
+            'four' : counter[4],
+            'three': counter[3],
+            'two'  : counter[2],
+            'one'  : counter[1]
+        }
+        print(scoreCounter['five'])
+        context['ratings'] = ratings
+        context['averageRating'] = averageScore
+        context['scoreCounter'] = scoreCounter
+        context['totalRatings'] = len(scoreList)
         return context
 
     def post(self, request, *args, **kwargs):
