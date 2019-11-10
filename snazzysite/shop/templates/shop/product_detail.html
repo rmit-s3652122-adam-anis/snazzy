@@ -77,7 +77,6 @@
 {% else %}
 .bar-1 {width: 0%; height: 18px; background-color: #f44336;}
 {% endif %}
-
 /* Responsive layout - make the columns stack on top of each other instead of next to each other */
 @media (max-width: 400px) {
   .side, .middle {
@@ -222,8 +221,14 @@
                             <span class="fa fa-star"></span>
                         {% endif %}        
                     {% endfor %}
+                    {% else %}
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
                 {% endif %}
-                <p>{{ averageRating }} average based on {{ scoreCounter.five }} reviews.</p>
+                <p>{{ averageRating }} average based on {{ totalRatings }} reviews.</p>
                 <hr style="border:3px solid #f1f1f1">
 
                 <div class="row">
