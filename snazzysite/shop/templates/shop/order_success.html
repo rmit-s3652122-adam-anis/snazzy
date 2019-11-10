@@ -1,7 +1,14 @@
 {% extends "shop/base.html" %}
 
 {% block extra_head %}
+<!-- Font Awesome Icon Library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
+
+.checked {
+  color: orange;
+}
 
 .order-list {
     width: 988px;
@@ -57,9 +64,18 @@
                                 <td>Qty: {{ order_product.quantity }}</td>
                                 <td>Total Price: {{ order_product.get_total_item_price }}</td>
                                 {% if order_product.rating %}
-                                    <td><a class='btn btn-primary float-right' href=''>Edit Review</a></td>
+                                    <td>
+                                        {% for i in '01234'|make_list %}
+                                            {% if order_product.rating.score >= forloop.counter %}
+                                                <span class="fa fa-star checked"></span>
+                                            {% else %}
+                                                <span class="fa fa-star"></span>
+                                            {% endif %}        
+                                        {% endfor %}
+                                        <a class='btn btn-primary float-right' href="{% url 'rating-update' order_product.rating.id %}">Edit Review</a>
+                                    </td>
                                 {% else %}
-                                    <td><a class='btn btn-primary float-right' href=''>Write A Review</a></td>
+                                    <td><a class='btn btn-primary float-right' href='{{ order_product.product_variant.product.get_new_rating_url }}'>Write A Review</a></td>
                                 {% endif %}
                             </tr>
                         {% endfor %}

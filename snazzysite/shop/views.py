@@ -166,22 +166,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
             context['images'] = ProductImageFormSet()
         return context
 
-    # def post(self, request, *args, **kwargs):
-    #     self.object = None
-    #     form_class = self.get_form_class()
-    #     form = self.get_form(form_class)
-    #     variant_form = ProductVariantFormSet(self.request.POST)
-    #     print(variant_form.is_valid())
-    #     image_form = ProductImageFormSet(self.request.POST, self.request.FILES)
-    #     print(image_form.is_valid())
-    #     print(image_form.cleaned_data)
-    #     if form.is_valid and variant_form.is_valid and image_form.is_valid():
-    #         return self.form_valid(form)
-    #     else:
-    #         return self.form_invalid(form)
-
     def form_valid(self, form):
-        print('in form valid for update')
         context = self.get_context_data()
         variants = context['variants']
         images = context['images']
@@ -739,3 +724,76 @@ class OrderSuccessView(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have a successful ordered product")
             return redirect("/")         
+
+# @login_required
+# def AddProductRatingView(LoginRequiredMixin, View):
+#     """
+#     Rate successful ordered product view
+#     """
+#     def get(self, *args, **kwargs):
+#         # get product object
+#         product = 
+
+class AddProductRatingView(LoginRequiredMixin, CreateView):
+    """
+    Rate successful ordered product view
+    """
+    model = Rating
+    template_name = "shop/rating_create.html"
+    fields = ['score', 'review']
+
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        slug = kwargs.get('slug')
+        product = get_object_or_404(Product, slug=slug)
+        context_data = self.get_context_data()
+        context_data.update(product = product)
+        return self.render_to_response(context_data)
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        product = get_object_or_404(Product, slug=self.kwargs['slug'])
+        form.instance.product = product
+        redirect_url = super().form_valid(form)
+        # save all ratings to order products which have the same product
+        product_variants = ProductVariant.objects.filter(product = product)
+        order_products = OrderProduct.objects.filter(product_variant__in = product_variants)
+        order_products.update(rating = form.instance)
+        return redirect_url
+        # return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('order-success')
+
+class UpdateProductRatingView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):                     
+    """
+    Update rating of successful ordered product view
+    """
+    model = Rating
+    template_name = 'shop/rating_create.html'
+    fields = ['score', 'review'] 
+
+    def get_object(self, queryset=None):
+        obj = Rating.objects.get(id=self.kwargs['rating_id'])
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # slug = kwargs.get('slug')
+        # product = get_object_or_404(Product, slug=slug)
+        context_data = self.get_context_data()
+        context_data.update(product = self.object.product)
+        return self.render_to_response(context_data)    
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        rating = self.get_object()
+        if self.request.user == rating.user:
+            return True
+        return False     
+
+    def get_success_url(self):
+        return reverse('order-success')  

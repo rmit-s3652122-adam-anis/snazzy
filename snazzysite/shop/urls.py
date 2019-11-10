@@ -33,4 +33,8 @@ urlpatterns = [
     path('product/<slug>/update', ProductUpdateView.as_view(), name="update"),
 
     path('product/<slug>/delete', product_delete_view, name="delete"),
+
+    # rating page
+    path('rating/<slug>/new', AddProductRatingView.as_view(), name="rating-create"),
+    path('rating/<rating_id>/update', UpdateProductRatingView.as_view(), name="rating-update")
 ]

@@ -63,6 +63,11 @@ class Product(models.Model):
 			'slug': self.slug
 		})
 
+	def get_new_rating_url(self):
+		return reverse('rating-create', kwargs={
+			'slug': self.slug
+		})	
+
 	def is_new(self):
 
 		start_date = self.created_at.date()
@@ -213,6 +218,11 @@ class Rating(models.Model):
 
 	def __str__(self):
 		return "Rating: {}:{}= {}".format(self.product.name, self.user.username, self.score)
+
+	def get_update_rating_url(self):
+		return reverse('rating-update', kwargs={
+			'rating-id': self.id
+		})	
 
 	def getReview(self):
 		return self.review	
