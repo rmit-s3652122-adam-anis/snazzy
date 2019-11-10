@@ -241,7 +241,11 @@
                     </div>
                   </div>
                   <div class="side right">
-                    <div>150</div>
+                    {% if scoreCounter.five %}
+                    <div>{{ scoreCounter.five }}</div>
+                    {% else %}
+                    <div>0</div>
+                    {% endif %}
                   </div>
                   <div class="side">
                     <div>4 star</div>
@@ -252,7 +256,11 @@
                     </div>
                   </div>
                   <div class="side right">
-                    <div>63</div>
+                      {% if scoreCounter.four %}
+                      <div>{{ scoreCounter.four }}</div>
+                      {% else %}
+                      <div>0</div>
+                      {% endif %}
                   </div>
                   <div class="side">
                     <div>3 star</div>
@@ -263,7 +271,11 @@
                     </div>
                   </div>
                   <div class="side right">
-                    <div>15</div>
+                      {% if scoreCounter.three %}
+                      <div>{{ scoreCounter.three }}</div>
+                      {% else %}
+                      <div>0</div>
+                      {% endif %}
                   </div>
                   <div class="side">
                     <div>2 star</div>
@@ -274,7 +286,11 @@
                     </div>
                   </div>
                   <div class="side right">
-                    <div>6</div>
+                      {% if scoreCounter.two %}
+                      <div>{{ scoreCounter.two }}</div>
+                      {% else %}
+                      <div>0</div>
+                      {% endif %}
                   </div>
                   <div class="side">
                     <div>1 star</div>
@@ -285,7 +301,11 @@
                     </div>
                   </div>
                   <div class="side right">
-                    <div>20</div>
+                      {% if scoreCounter.one %}
+                      <div>{{ scoreCounter.one }}</div>
+                      {% else %}
+                      <div>0</div>
+                      {% endif %}
                   </div>
                 </div>
               </div>
