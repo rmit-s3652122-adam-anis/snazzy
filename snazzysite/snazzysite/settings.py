@@ -27,10 +27,7 @@ SECRET_KEY = secrets.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
-# Application definition
+ALLOWED_HOSTS = ['ec2-13-211-252-85.ap-southeast-2.compute.amazonaws.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -188,9 +185,9 @@ EMAIL_HOST_PASSWORD = secrets.EMAIL_HOST_PASSWORD
 
 # GOOGLE CLOUD STORAGE
 # for windows
-GOOGLE_APPLICATION_CREDENTIALS = secrets.GOOGLE_APPLICATION_CREDENTIALS
+# GOOGLE_APPLICATION_CREDENTIALS = secrets.GOOGLE_APPLICATION_CREDENTIALS
 # for mac
-# GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = 'snazzy-bucket'
 GS_FILE_OVERWRITE = False # do not overwrite files with same name
