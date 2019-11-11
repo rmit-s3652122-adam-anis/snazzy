@@ -406,8 +406,18 @@ class OrderSummaryView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(buyer=self.request.user, ordered=False)
+            # get similar styles which user tries to buy
+            styles = []
+            for order_product in order.order_products.all():
+                checkstyle = order_product.product_variant.product.product_style
+                if checkstyle not in styles:
+                    styles.append(checkstyle)
+            # recommend products of similar styles
+            recommend_products = Product.objects.filter(product_style__in = styles)[:3]
+            print(recommend_products)
             context = {
-                'object': order
+                'object': order,
+                'recommends': recommend_products
             }
             return render(self.request, 'shop/order_summary.html', context)
         except ObjectDoesNotExist:

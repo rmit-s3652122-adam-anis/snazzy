@@ -74,6 +74,90 @@
     </table>
 
     </div>
+    {% if recommends %}
+    <!--Grid row-->
+    <div class="row d-flex justify-content-center wow fadeIn">
+    
+        <!--Grid column-->
+        <div class="col-md-6 text-center">
+
+          <h4 class="my-4 h4">People who buys these products also buys</h4>
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      <!--Grid row-->
+      
+      <div class="justify-content-center row wow fadeIn">
+
+            {% for product in recommends %}
+            <!--Grid column-->
+            <div class="col-lg-3 col-md-6 mb-4">
+
+            <!--Card-->
+            <div class="card">
+    
+                <!--Card image-->
+                <div class="view overlay">
+                {% if product.has_images.all %}
+                    {% with product.has_images.all|first as first_image %}
+                        <img src="{{ first_image.imagefile.url }}" class="card-img-top"
+                        alt="">
+                        <a href="{{ product.get_absolute_url }}">
+                            <div class="mask rgba-white-slight"></div>
+                        </a>
+                    {% endwith %}
+                {% else %}
+                    <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12.jpg" class="card-img-top"
+                    alt="">
+                    <a href="{{ product.get_absolute_url }}">
+                        <div class="mask rgba-white-slight"></div>
+                    </a>
+                {% endif %}
+                <!-- <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12.jpg" class="card-img-top"
+                    alt="">
+                    <a>
+                        <div class="mask rgba-white-slight"></div>
+                    </a> -->
+                </div>
+                <!--Card image-->
+
+                <!--Card content-->
+                <div class="card-body text-center">
+                <!--Category & Title-->
+                <a href="" class="grey-text">
+                    <h5>{{ product.product_style.description }}</h5>
+                </a>
+                <h5>
+                    <strong>
+                    <a href="{{ product.get_absolute_url }}" class="dark-grey-text">{{ product.name }}
+                        {% if product.is_new  %}
+                            <span class="badge badge-pill danger-color">NEW</span>
+                        {% endif %}
+                    </a>
+                    </strong>
+                </h5>
+
+                <h4 class="font-weight-bold blue-text">
+                    <strong>{{ product.price }}</strong>
+                </h4>
+
+                </div>
+                <!--Card content-->
+
+            </div>
+            <!--Card-->
+
+            </div>
+            <!--Grid column-->
+            {% endfor %}
+
+      </div>
+      <!--Grid row-->
+      {% endif %}
 
     </div>
   </main>

@@ -211,7 +211,7 @@ class Rating(models.Model):
 		(5, 'Excellent')
 	)
 
-	user = models.ForeignKey(User, related_name='vote', on_delete=models.SET_NULL, null=True)
+	user = models.ForeignKey(User, related_name='ratings', on_delete=models.SET_NULL, null=True)
 	product = models.ForeignKey(Product, related_name='product', on_delete=models.CASCADE)
 	score = models.IntegerField(choices=rating_CHOICES, default=1)
 	review = models.TextField()
