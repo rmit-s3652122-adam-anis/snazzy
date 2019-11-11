@@ -1,3 +1,4 @@
+from collections import Counter
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -106,10 +107,8 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         product = form.save(commit=False)
-        product = form.detele(commit=False)
         form.instance.user = self.request.user
         product.save()
-        product.delete()
         self.object = product
         return super(ProductUpdateView, self).form_valid(form)
 
@@ -168,26 +167,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
             context['images'] = ProductImageFormSet()
         return context
 
-    # def post(self, request, *args, **kwargs):
-    #     self.object = None
-    #     form_class = self.get_form_class()
-    #     form = self.get_form(form_class)
-    #     variant_form = ProductVariantFormSet(self.request.POST)
-    #     print(variant_form.is_valid())
-    #     image_form = ProductImageFormSet(self.request.POST, self.request.FILES)
-    #     print(image_form.is_valid())
-    #     print(image_form.cleaned_data)
-    #     if form.is_valid and variant_form.is_valid and image_form.is_valid():
-    #         return self.form_valid(form)
-    #     else:
-    #         return self.form_invalid(form)
-
     def form_valid(self, form):
-        print('in form valid for update')
         context = self.get_context_data()
         variants = context['variants']
         images = context['images']
-        print(images.cleaned_data)
         with transaction.atomic():
             # create new product object
             form.instance.supplier = self.request.user
@@ -202,7 +185,6 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
                 # create new images objects
                 for image in images.cleaned_data:
                     if image:
-                        print(image)
                         imagefile = image['image']
                         product = self.object
                         product_image = ProductImage(product=product, imagefile=imagefile)
@@ -236,9 +218,32 @@ class ProductDetailView(FormMixin, DetailView):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         # context['form'] = AddToCartForm(product_choice=self.get_object())
         context['form'] = self.get_form()
+        # populate product ratings and average rating score
+        ratings = Rating.objects.filter(product=self.get_object())
+        scoreList = []
+        for rating in ratings:
+            scoreList.append(rating.score)
+        context['ratings'] = ratings    
+        if len(scoreList) > 0:
+            averageScore = sum(scoreList) / len(scoreList)
+            counter = Counter(scoreList)
+            scoreCounter = {
+                'five' : counter[5],
+                'four' : counter[4],
+                'three': counter[3],
+                'two'  : counter[2],
+                'one'  : counter[1]
+            }
+            context['scoreCounter'] = scoreCounter
+            context['totalRatings'] = len(scoreList)
+            context['averageRating'] = averageScore
+        else:
+            context['totalRatings'] = 0    
         return context
 
     def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
         self.object = self.get_object()
         form = self.get_form()
         if form.is_valid():
@@ -401,13 +406,24 @@ class OrderSummaryView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(buyer=self.request.user, ordered=False)
+            # get similar styles which user tries to buy
+            styles = []
+            for order_product in order.order_products.all():
+                checkstyle = order_product.product_variant.product.product_style
+                if checkstyle not in styles:
+                    styles.append(checkstyle)
+            # recommend products of similar styles
+            recommend_products = Product.objects.filter(product_style__in = styles)[:3]
+            print(recommend_products)
             context = {
-                'object': order
+                'object': order,
+                'recommends': recommend_products
             }
             return render(self.request, 'shop/order_summary.html', context)
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
             return redirect("/")
+           
 
 def about(request):
     return render(request, 'shop/about.html', {'title': 'About'})
@@ -666,6 +682,8 @@ class PaymentView(View):
                 order_products = order.order_products.all()
                 order_products.update(ordered=True)
                 for order_product in order_products:
+                    # check if user bought item before, set the same rating if true
+                    order_product.rating = Rating.objects.filter(user = payment.user, product = order_product.product_variant.product).first()
                     order_product.save()
                     # update stock quantity of product variants
                     product_variant = order_product.product_variant
@@ -723,4 +741,91 @@ class PaymentView(View):
         messages.warning(self.request, "Invalid data received")
         return redirect("/payment/stripe/")
 
-    
+class OrderSuccessView(LoginRequiredMixin, View):
+    """
+    Successful orders enabled for ratings view
+    """
+    def get(self, *args, **kwargs):
+        try:
+            context = {}
+            orders = Order.objects.filter(buyer=self.request.user, ordered=True)
+            context.update({
+                'object': orders,
+            })
+            return render(self.request, 'shop/order_success.html', context)
+        except ObjectDoesNotExist:
+            messages.warning(self.request, "You do not have a successful ordered product")
+            return redirect("/")         
+
+# @login_required
+# def AddProductRatingView(LoginRequiredMixin, View):
+#     """
+#     Rate successful ordered product view
+#     """
+#     def get(self, *args, **kwargs):
+#         # get product object
+#         product = 
+
+class AddProductRatingView(LoginRequiredMixin, CreateView):
+    """
+    Rate successful ordered product view
+    """
+    model = Rating
+    template_name = "shop/rating_create.html"
+    fields = ['score', 'review']
+
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        slug = kwargs.get('slug')
+        product = get_object_or_404(Product, slug=slug)
+        context_data = self.get_context_data()
+        context_data.update(product = product)
+        return self.render_to_response(context_data)
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        product = get_object_or_404(Product, slug=self.kwargs['slug'])
+        form.instance.product = product
+        redirect_url = super().form_valid(form)
+        # save all ratings to order products which have the same product
+        product_variants = ProductVariant.objects.filter(product = product)
+        order_products = OrderProduct.objects.filter(product_variant__in = product_variants)
+        order_products.update(rating = form.instance)
+        return redirect_url
+        # return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('order-success')
+
+class UpdateProductRatingView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):                     
+    """
+    Update rating of successful ordered product view
+    """
+    model = Rating
+    template_name = 'shop/rating_create.html'
+    fields = ['score', 'review'] 
+
+    def get_object(self, queryset=None):
+        obj = Rating.objects.get(id=self.kwargs['rating_id'])
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # slug = kwargs.get('slug')
+        # product = get_object_or_404(Product, slug=slug)
+        context_data = self.get_context_data()
+        context_data.update(product = self.object.product)
+        return self.render_to_response(context_data)    
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        rating = self.get_object()
+        if self.request.user == rating.user:
+            return True
+        return False     
+
+    def get_success_url(self):
+        return reverse('order-success')  

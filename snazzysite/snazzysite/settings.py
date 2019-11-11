@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # app configs
     'shop.apps.ShopConfig',
@@ -47,6 +48,8 @@ INSTALLED_APPS = [
     'storages',
     'django_countries',
     'django_secrets',
+    'recommends',
+    'recommends.storages.djangoorm'
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SITE_ID = 1
 
 ROOT_URLCONF = 'snazzysite.urls'
 

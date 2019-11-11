@@ -142,3 +142,6 @@ snazzysite/.bash-profile.save
 
 # migrations
 *.migrations
+.vscode/settings.json
+snazzysite/shop/migrations/0002_rating.py
+snazzysite/shop/migrations/0003_orderproduct_rating.py

@@ -1,0 +1,22 @@
+{% extends "shop/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <h1>Rate Product</h1>
+        <div class="card">
+            <div class="card-header">
+                Rate product - {{ product.name }}
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="form-group">
+                        <!-- <button class="btn btn-outline-info" type="submit">Submit</button> -->
+                        <input class="btn btn-outline-info" type="submit" value="submit"> 
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
