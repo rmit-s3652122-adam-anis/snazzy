@@ -1,4 +1,8 @@
 # snazzy
+
+VISIT OUR WEBSITE AT:
+http://ec2-13-211-252-85.ap-southeast-2.compute.amazonaws.com:8000/
+
 RMIT Programming Project by Geek Bank group.
 Snazzy is an e-commerce website focusing on marketing apparels.
 
