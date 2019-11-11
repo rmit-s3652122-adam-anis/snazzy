@@ -37,7 +37,15 @@ pip install -r requirements_mac.txt
 
 6. This project used google cloud services and requires private access keys and key files, to set up:
     1. email s3652122@student.rmit.edu.au to attain access keys and key files
-    2. using terminal, navigate inside the snazzysite folder (snazzy/snazzysite), run command python manage.py runserver, it will prompt user to input secret key values of the environment. Input the access key values/key file directory path as prompted 
+    2. (for windows machine only) using terminal, navigate inside the snazzysite folder (snazzy/snazzysite), run command python manage.py runserver, it will prompt user to input secret key values of the environment. Input the access key values/key file directory path as prompted
+    3. (for mac/linux machine only) You have to set up the credentials which are access keys and key files into the os environment variables. Users can refer to this website for guidelines how to do:
+        https://askubuntu.com/questions/58814/how-do-i-add-environment-variables
+    OR users can simply follow these steps:
+        1. Navigate to the bin file in the virtual environment (snazzyenv/bin/)
+        2. add the following 2 lines of code inside the activate file:-
+            GOOGLE_APPLICATION_CREDENTIALS = filepath
+            export GOOGLE_APPLICATION_CREDENTIALS
+    4. go and edit snazzysite/snazzysite/settings.py file at line 187 to 191. There listed whether a user is using a windows machine or mac/linux machine. Uncomment line 189 if using a windows machine. Else, uncomment line 191 if using a linux/mac machine
 
 6. Test if able to run the website. Using terminal, inside the site folder (snazzysite) run the command lines: 
 python manage.py migrate (to update website settings)
