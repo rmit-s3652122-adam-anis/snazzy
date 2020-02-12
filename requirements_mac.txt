@@ -5,7 +5,7 @@ cachetools==3.1.1
 certifi==2019.6.16
 chardet==3.0.4
 colorama==0.4.1
-Django==2.2.4
+Django==2.2.10
 django-cleanup==4.0.0
 django-countries==5.5
 django-crispy-forms==1.7.2
